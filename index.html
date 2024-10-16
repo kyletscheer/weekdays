@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Find the Day of the Week Trick - Home</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  
+  <style>
+    html, body {
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Day of the Week Trick</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="find.html">Find Day of Week</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="test.html">Test Yourself</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    <h1 class="my-4">Learn How to Find the Day of the Week for Any Date</h1>
+    <p>This website helps you learn how to quickly and easily calculate the day of the week for any date between 1900 and 2099. Whether you're practicing mental math tricks or just curious, this tool can help you master it!</p>
+
+    <h3>How It Works - The Basics</h3>
+    <p>The trick relies on using "prime dates" in each month. By following a set of simple calculations, you can find out what day of the week a specific date falls on.</p>
+    <p><strong>Here's the basic process:</strong></p>
+    <ol>
+      <li>Select the prime date for the month.</li>
+      <li>Calculate the difference in days from the selected date.</li>
+      <li>Account for the year and century modifiers.</li>
+      <li>Combine the results to find the day of the week!</li>
+    </ol>
+
+    <p>Get started by heading to the <a href="find.html">Find Day of the Week</a> page, or challenge yourself with the <a href="test.html">5-minute test!</a></p>
+  </div>
+  <hr>
+  <div class="container mt-4"> 
+    <h2>How It Works - Detailed</h2>
+    <p>
+        This system allows you to find the day of the week for any date between 1900 and 2099 using a step-by-step method
+        involving a set of fixed "prime dates," month-based day adjustments, and century modifiers. The idea is to break
+        down a date into smaller components and perform simple arithmetic to determine the weekday.
+    </p>
+
+    <h3>Step-by-Step Process</h3>
+    <ol>
+        <li>
+            <strong>Identify the Prime Date:</strong> Each month has a specific "prime date" (such as 4/4 for April, 6/6 for June, or 12/12 for December). If the date you're trying to find is the prime date for that month, you can immediately skip to the next step. If not, you calculate the difference in days between the given date and the prime date of the same month.
+            <ul>
+                <li><strong>January</strong>: 1/3 (1/4 in leap years)</li>
+                <li><strong>February</strong>: 2/28 (2/29 in leap years)</li>
+                <li><strong>March</strong>: 3/14</li>
+                <li><strong>April</strong>: 4/4</li>
+                <li><strong>May</strong>: 5/9</li>
+                <li><strong>June</strong>: 6/6</li>
+                <li><strong>July</strong>: 7/11</li>
+                <li><strong>August</strong>: 8/8</li>
+                <li><strong>September</strong>: 9/5</li>
+                <li><strong>October</strong>: 10/10</li>
+                <li><strong>November</strong>: 11/7</li>
+                <li><strong>December</strong>: 12/12</li>
+            </ul>
+            
+        </li>
+        <li>
+            <strong>Calculate the Days Difference:</strong> Find the number of days between the selected date and the prime date for that month. Then take this difference and divide it by 7, keeping the remainder. This remainder will tell you how many days forward (or backward) from the prime date the actual date is.
+        </li>
+        <li>
+            <strong>Add the Year Offset:</strong> Next, break down the year into two parts:
+            <ul>
+                <li>Take the last two digits of the year (for example, 1987 becomes 87).</li>
+                <li>Divide this by 4 (ignoring remainders) and add this value to the last two digits of the year.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Add the Century Modifier:</strong> Instead of a century anchor, this system uses a century modifier:
+            <ul>
+                <li>For the 1900s, the century modifier is 3.</li>
+                <li>For the 2000s, the century modifier is 2.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Handle Leap Years:</strong> If the date is in January or February of a leap year, subtract 1 from your running total.
+        </li>
+        <li>
+            <strong>Calculate the Weekday:</strong> Add up all the calculated values (prime date remainder, year offset, century modifier, and leap year adjustment if needed). Then, divide the total by 7 and take the remainder to find the weekday:
+            <ul>
+                <li>0 = Sunday</li>
+                <li>1 = Monday</li>
+                <li>2 = Tuesday</li>
+                <li>3 = Wednesday</li>
+                <li>4 = Thursday</li>
+                <li>5 = Friday</li>
+                <li>6 = Saturday</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Examples</h3>
+    
+    <h4>Example 1: October 10, 1965</h4>
+    <ol>
+        <li>
+            <strong>Prime Date:</strong> For October, the prime date is 10/10. Since the selected date is 10/10, there’s no need to calculate a day difference.
+        </li>
+        <li>
+            <strong>Year Offset:</strong> The last two digits of 1965 are 65. Dividing 65 by 4 gives 16 (ignoring the remainder). Add 65 + 16 = 81.
+        </li>
+        <li>
+            <strong>Century Modifier:</strong> For the 1900s, the century modifier is 3. Adding 81 + 3 = 84.
+        </li>
+        <li>
+            <strong>Leap Year Adjustment:</strong> 1965 is not a leap year, and October is after February, so no adjustment is needed.
+        </li>
+        <li>
+            <strong>Find the Day of the Week:</strong> Now, divide the total (84) by 7, which gives a remainder of 0. Therefore, October 10, 1965, is a <strong>Sunday</strong>.
+        </li>
+    </ol>
+
+    <h4>Example 2: March 14, 2022</h4>
+    <ol>
+        <li>
+            <strong>Prime Date:</strong> For March, the prime date is 3/14. Since the selected date is 3/14, there’s no need to calculate a day difference.
+        </li>
+        <li>
+            <strong>Year Offset:</strong> The last two digits of 2022 are 22. Dividing 22 by 4 gives 5 (ignoring the remainder). Add 22 + 5 = 27.
+        </li>
+        <li>
+            <strong>Century Modifier:</strong> For the 2000s, the century modifier is 2. Adding 27 + 2 = 29.
+        </li>
+        <li>
+            <strong>Leap Year Adjustment:</strong> 2022 is not a leap year, and March is after February, so no adjustment is needed.
+        </li>
+        <li>
+            <strong>Find the Day of the Week:</strong> Now, divide the total (29) by 7, which gives a remainder of 1. Therefore, March 14, 2022, is a <strong>Monday</strong>.
+        </li>
+    </ol>
+
+    <h3>Try It Yourself</h3>
+    <p>
+        Use the <a href="find.html">"Find a Day" tool</a> on this website to input any date between 1900 and 2099 and follow the calculation steps to find the exact day of the week. You can also take the <a href="test.html">5-minute test</a> to see how fast you can determine the weekday for random dates!
+    </p>
+</div>
+
+
+  <div style="height: 50px"></div>
+
+  <!-- Footer -->
+  <footer class="bg-dark fixed-bottom" style="padding: 10px;">
+    <div class="container">
+      <p class="m-0 text-center text-white">Made by <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a></p>
+    </div>
+  </footer>
+</body>
+
+</html>

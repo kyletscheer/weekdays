@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day of the Week Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+    <style>
+      html, body {
+        height: 100%;
+      }
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #result,
+        #end-message {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #test-section {
+            display: none;
+        }
+
+        #timer {
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            margin: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-red {
+            background-color: #dc3545;
+        }
+
+        .btn-red:hover {
+            background-color: #c82333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Day of the Week Trick</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="find.html">Find Day of Week</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="test.html">Test Yourself</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    <h1>Day of the Week Test</h1>
+    <p>You will be shown random dates between 1900 and 2099. Enter the correct weekday (e.g., Monday, Tuesday) for as
+        many dates as possible within 5 minutes. Good luck!</p>
+    <button id="start-button">Start</button>
+    <div id="test-section">
+        <p id="date-display"></p>
+        <label for="weekday-input">Enter the weekday:</label>
+        <input list="days" id="weekday-input" placeholder="Enter weekday" required>
+        <datalist id="days">
+            <option value="Monday">
+            <option value="Tuesday">
+            <option value="Wednesday">
+            <option value="Thursday">
+            <option value="Friday">
+            <option value="Saturday">
+            <option value="Sunday">
+        </datalist>
+        <button class="btn" id="submit-answer">Submit</button>
+        <button class="btn btn-red" id="give-up">Give Up</button>
+        <button class="btn" id="skip">Skip</button>
+        <p id="error-message" class="hidden">Please enter a valid weekday (Monday to Sunday).</p>
+        <p id="timer">Time Remaining: 05:00</p>
+
+    </div>
+    <p id="total-submissions">Total Answers Submitted: <span id="submission-count">0</span></p>
+
+    <div id="result" class="hidden">
+        <h2>Answer Report</h2>
+        <table id="answer-report">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time Answered</th>
+                    <th>User Answer</th>
+                    <th>Correct Answer</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="report-body">
+                <!-- Answer report rows will be added here -->
+            </tbody>
+        </table>
+        <p id="score"></p>
+        <p id="time-left"></p>
+        <button class="btn" id="retry" onclick="location.reload();">Try Again</button>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        let currentDate;
+        let timerInterval;
+        const timeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const dateDisplay = document.getElementById('date-display');
+        const input = document.getElementById('weekday-input');
+        const timerElement = document.getElementById('timer');
+        const resultElement = document.getElementById('result');
+        const scoreElement = document.getElementById('score');
+        const timeLeftElement = document.getElementById('time-left');
+        const reportBody = document.getElementById('report-body');
+        const submissionCountElement = document.getElementById('submission-count');
+        const errorMessage = document.getElementById('error-message');
+        let timeRemaining = timeLimit;
+        let submissionCount = 0;
+        const answers = []; // Array to store answers
+        const validDays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+        // Initialize timer
+        function startTimer() {
+            const endTime = Date.now() + timeLimit;
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                timeRemaining = endTime - now;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    endTest();
+                }
+
+                updateTimer();
+            }, 1000);
+        }
+        document.getElementById('start-button').addEventListener('click', function () {
+            // Hide the start button
+            document.getElementById('start-button').style.display = 'none';
+
+            // Show the test elements
+            document.getElementById('test-section').style.display = 'block';
+
+            // Start the timer
+            startTimer();
+
+            // Show the first date
+            showNewDate();
+        });
+
+        // Update timer display
+        function updateTimer() {
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            timerElement.innerHTML = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Generate random date between 1900 and 2099
+        function getRandomDate() {
+            const year = Math.floor(Math.random() * 200) + 1900;
+            const month = Math.floor(Math.random() * 12) + 1;
+            const day = Math.floor(Math.random() * 28) + 1; // Keep it simple with 28 days max
+            return new Date(year, month - 1, day); // JavaScript Date uses 0-indexed months
+        }
+
+        // Display new random date
+        function showNewDate() {
+            currentDate = getRandomDate();
+            dateDisplay.innerHTML = `What is the day of the week for: <b>${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}</b>?`;
+        }
+
+        // End the test
+        function endTest() {
+            clearInterval(timerInterval);
+            dateDisplay.classList.add('hidden');
+            input.classList.add('hidden');
+            document.getElementById('submit-answer').classList.add('hidden');
+            document.getElementById('skip').classList.add('hidden');
+            document.getElementById('give-up').classList.add('hidden');
+            timerElement.classList.add('hidden');
+            submissionCountElement.classList.add('hidden');
+            resultElement.classList.remove('hidden');
+            scoreElement.innerHTML = `<b>Your score: ${correctAnswers} correct answers!</b>`;
+            timeLeftElement.innerHTML = `<b>Time left: ${(Math.floor(timeRemaining / 60000))}:${(Math.floor((timeRemaining % 60000) / 1000)).toString().padStart(2, '0')}</b>`;
+            showReport();
+        }
+
+        // Show the answer report
+        function showReport() {
+            answers.forEach(answer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${answer.date}</td>
+                    <td>${answer.time}</td>
+                    <td>${answer.userAnswer || "Skipped"}</td>
+                    <td>${answer.correctAnswer}</td>
+                    <td>${answer.isCorrect ? "Correct" : "Incorrect"}</td>
+                `;
+                reportBody.appendChild(row);
+            });
+        }
+
+        // "Give Up" functionality
+        document.getElementById('give-up').addEventListener('click', function () {
+            endTest();  // End the test immediately
+        });
+
+        // "Skip" functionality
+        document.getElementById('skip').addEventListener('click', function () {
+            const currentTime = timerElement.innerText.replace('Time Remaining: ', '');
+            answers.push({
+                date: currentDate.toLocaleDateString(),
+                time: currentTime,
+                userAnswer: null,
+                correctAnswer: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
+                isCorrect: false,
+            });
+            submissionCount++;
+            submissionCountElement.innerText = submissionCount;
+            showNewDate();
+        });
+
+        // Function to check the correct weekday
+        function checkAnswer() {
+            const userAnswer = input.value.trim().toLowerCase();
+
+            // Validation check for valid days
+            if (!validDays.includes(userAnswer)) {
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+            errorMessage.classList.add('hidden');
+
+            const correctDay = currentDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+            const currentTime = timerElement.innerText.replace('Time Remaining: ', '');
+            answers.push({
+                date: currentDate.toLocaleDateString(),
+                time: currentTime,
+                userAnswer: userAnswer,
+                correctAnswer: correctDay,
+                isCorrect: userAnswer === correctDay
+            });
+
+            if (userAnswer === correctDay) {
+                correctAnswers++;
+            }
+
+            // Update submission count and display a new date
+            submissionCount++;
+            submissionCountElement.innerText = submissionCount;
+            input.value = ''; // Clear input for the next answer
+            showNewDate();
+        }
+
+        // Submit answer functionality
+        document.getElementById('submit-answer').addEventListener('click', function () {
+            checkAnswer();
+        });
+
+        // Press Enter to submit answer
+        input.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        // Start the test
+        //showNewDate();
+        //startTimer();
+    </script>
+    </div>
+
+    <div style="height: 50px"></div>
+  
+    <!-- Footer -->
+    <footer class="bg-dark fixed-bottom" style="padding: 10px;">
+      <div class="container">
+        <p class="m-0 text-center text-white">Made by <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a></p>
+      </div>
+    </footer>
+</body>
+
+</html>
