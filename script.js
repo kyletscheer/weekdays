@@ -18,10 +18,10 @@ document.getElementById('dateForm').addEventListener('submit', function (event) 
 });
 
 function calculateDayOfWeek(day, month, year) {
-    const primeDates = {
-        1: year % 4 === 0 ? 4 : 3, // January prime date
-        2: year % 4 === 0 ? 29 : 28, // February prime date
-        3: 14, // March prime date
+    const anchorDates = {
+        1: (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 4 : 3, // January anchor date
+        2: (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28, // February anchor date        
+        3: 14, // March anchor date
         4: 4,
         5: 9,
         6: 6,
@@ -33,9 +33,9 @@ function calculateDayOfWeek(day, month, year) {
         12: 12
     };
 
-    // Step 1: Prime Date Difference
-    const primeDate = primeDates[month];
-    const difference = day - primeDate;
+    // Step 1: anchor Date Difference
+    const anchorDate = anchorDates[month];
+    const difference = day - anchorDate;
     const mod7Difference = difference % 7;
 
     // Step 2: Century Modifier
@@ -56,27 +56,26 @@ function calculateDayOfWeek(day, month, year) {
 
     // Step 5: Explanation in HTML with bolded text
     const explanation = `
-        <b>Step 1: Prime Date Difference</b><br>
-        Prime date for ${month}: ${primeDate}<br>
-        Formula: (Input day - Prime date) % 7<br>
-        (${day} - ${primeDate}) % 7 = ${mod7Difference}<br><br>
+        <b>Step 1: anchor Date Difference</b><br>
+        anchor date for ${month}: ${anchorDate}<br>
+        Formula: (Input day - anchor date) % 7<br>
+        (${day} - ${anchorDate}) % 7 = <strong>${mod7Difference}</strong><br><br>
 
         <b>Step 2: Century Modifier</b><br>
         Formula: Based on the century (3 for 1900s, 2 for 2000s)<br>
-        Century Modifier: ${centuryModifier}<br><br>
+        Century Modifier: <strong>${centuryModifier}</strong><br><br>
 
-        <b>Step 3: Year Calculation</b><br>
+        <b>Step 3: Year Calculations</b><br>
         Last two digits of the year: ${lastTwoDigits}<br>
-        Quotient (last two digits ÷ 12): ${quotient}<br>
-        Remainder: ${remainder}<br>
-        Formula: Remainder ÷ 4 = ${remainderQuotient}<br><br>
+        Quotient (last two digits ÷ 12): <strong>${quotient}</strong><br>
+        Remainder: <strong>${remainder}</strong><br>
+        Remainder Quotient: Remainder ÷ 4 = <strong>${remainderQuotient}</strong><br><br>
 
         <b>Step 4: Summing it All Together</b><br>
-        Formula: Quotient + Remainder + (Remainder ÷ 4) + Century Modifier + Prime Date Difference<br>
-        ${quotient} + ${remainder} + ${remainderQuotient} + ${centuryModifier} + ${mod7Difference} = ${sum}<br><br>
-
-        <b>Step 5: Modulus 7 to Get the Day of the Week</b><br>
-        Final calculation: ${sum} % 7 = ${anchorDay}<br><br>
+Formula: Anchor Date Difference + Century Modifier + Quotient + Remainder + (Remainder ÷ 4)<br>
+${mod7Difference} + ${centuryModifier} + ${quotient} + ${remainder} + ${remainderQuotient} = <strong>${sum}</strong><br><br>
+        <b>Step 5: Find the remainder after dividing by 7 to get the day of the week</b><br>
+        Final calculation: ${sum} % 7 = <strong>${anchorDay}</strong><br><br>
 
         <b>Day of the Week: ${dayNames[anchorDay < 0 ? anchorDay + 7 : anchorDay]}</b>
     `;
