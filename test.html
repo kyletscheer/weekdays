@@ -1,116 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day of the Week Test</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-    <style>
-      html, body {
-        height: 100%;
-      }
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+    rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 
-        #result,
-        #end-message {
-            margin-top: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #test-section {
-            display: none;
-        }
-
-        #timer {
-            font-weight: bold;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            margin: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-red {
-            background-color: #dc3545;
-        }
-
-        .btn-red:hover {
-            background-color: #c82333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        #error-message {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+  <title>Find the Day of the Week Trick - Home</title>
 </head>
 
 <body>
     <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Day of the Week Trick</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="find.html">Find Day of Week</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="test.html">Test Yourself</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Project Title</a>
+            
+            <!-- Navbar actions container for mobile -->
+            <div class="navbar-actions">
+                <!-- Theme toggle moved outside collapse -->
+                <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle theme">
+                    <i class="bi bi-sun-fill"></i>
+                </div>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="find.html">Find Day of Week</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="test.html">Test Yourself</a>
+                  </li>
+                </ul>
+              </div>
+        </div>
+    </nav>
 
   <!-- Page Content -->
+  <main class="py-5">
+
   <div class="container">
     <h1>Day of the Week Test</h1>
     <p>You will be shown random dates between 1900 and 2099. Enter the correct weekday (e.g., Monday, Tuesday) for as
         many dates as possible within 5 minutes. Good luck!</p>
     <button id="start-button">Start</button>
+    <p id="timer">Time Remaining: 05:00</p>
     <div id="test-section">
         <p id="date-display"></p>
         <label for="weekday-input">Enter the weekday:</label>
@@ -128,7 +76,6 @@
         <button class="btn btn-red" id="give-up">Give Up</button>
         <button class="btn" id="skip">Skip</button>
         <p id="error-message" class="hidden">Please enter a valid weekday (Monday to Sunday).</p>
-        <p id="timer">Time Remaining: 05:00</p>
 
     </div>
     <p id="total-submissions">Total Answers Submitted: <span id="submission-count">0</span></p>
@@ -325,15 +272,25 @@
         //startTimer();
     </script>
     </div>
-
-    <div style="height: 50px"></div>
+</main>
   
-    <!-- Footer -->
-    <footer class="bg-dark fixed-bottom" style="padding: 10px;">
-      <div class="container">
-        <p class="m-0 text-center text-white">Made by <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a></p>
-      </div>
-    </footer>
+<!-- Footer -->
+<footer class="bg-white border-top py-4 mt-auto">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                Made by <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a>
+            </div>
+            <a href="https://github.com/kyletscheer/weekdays" target="_blank">View Code</a>
+        </div>
+    </div>
+</footer>
+ <!-- Bootstrap Bundle with Popper -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+ <script src="darkmode.js"></script>
+ <script>
+     
+ </script>
 </body>
 
 </html>
