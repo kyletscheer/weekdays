@@ -56,23 +56,29 @@
   <div class="container">
     <h1>Day of the Week Test</h1>
     <p>You will be shown random dates between 1900 and 2099. Enter the correct weekday (e.g., Monday, Tuesday) for as
-        many dates as possible within 5 minutes. Good luck!</p>
+        many dates as possible within the number of minutes you set. Good luck!</p>
+    <label for="custom-time">Set Time Limit (minutes):</label>
+    <input type="number" id="custom-time" step="1" min="1" placeholder="5" value="5">
     <button id="start-button">Start</button>
-    <p id="timer">Time Remaining: 05:00</p>
+    <p id="pause-remaining">Pauses Remaining: 3</p>
+    <p id="timer" aria-live="polite">Time Remaining: 05:00</p>
     <div id="test-section">
         <p id="date-display"></p>
-        <label for="weekday-input">Enter the weekday:</label>
-        <input list="days" id="weekday-input" placeholder="Enter weekday" required>
-        <datalist id="days">
-            <option value="Monday">
-            <option value="Tuesday">
-            <option value="Wednesday">
-            <option value="Thursday">
-            <option value="Friday">
-            <option value="Saturday">
-            <option value="Sunday">
-        </datalist>
-        <button class="btn" id="submit-answer">Submit</button>
+        <div id="question-area">
+            <label for="weekday-input">Enter the weekday:</label>
+            <input list="days" id="weekday-input" placeholder="Enter weekday" required>
+            <datalist id="days">
+                <option value="Monday">
+                <option value="Tuesday">
+                <option value="Wednesday">
+                <option value="Thursday">
+                <option value="Friday">
+                <option value="Saturday">
+                <option value="Sunday">
+            </datalist>
+            <button class="btn" id="submit-answer">Submit</button>
+        </div>
+        <button id="pause-button" class="btn" style="background-color: #218838;display:none;">Pause</button>
         <button class="btn btn-red" id="give-up">Give Up</button>
         <button class="btn" id="skip">Skip</button>
         <p id="error-message" class="hidden">Please enter a valid weekday (Monday to Sunday).</p>
@@ -120,9 +126,16 @@
         const answers = []; // Array to store answers
         const validDays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
+        let pauseCount = 0;
+        let isPaused = false;
+        const maxPauses = 3;
+        let originalTimeLimit = timeLimit; // Store the original limit
+
+        const questionArea = document.getElementById('question-area');
+
         // Initialize timer
         function startTimer() {
-            const endTime = Date.now() + timeLimit;
+            const endTime = Date.now() + timeRemaining;
 
             timerInterval = setInterval(() => {
                 const now = Date.now();
@@ -137,17 +150,45 @@
             }, 1000);
         }
         document.getElementById('start-button').addEventListener('click', function () {
-            // Hide the start button
+            pauseCount = 0;
+            isPaused = false;
+            timeRemaining = originalTimeLimit;
+            document.getElementById('pause-remaining').innerText = `Pauses Remaining: ${maxPauses - pauseCount}`;
+            const customMinutes = parseInt(document.getElementById('custom-time').value);
+            if (!isNaN(customMinutes) && customMinutes > 0) {
+                originalTimeLimit = customMinutes * 60 * 1000;
+                timeRemaining = originalTimeLimit;
+            }
+
             document.getElementById('start-button').style.display = 'none';
-
-            // Show the test elements
+            document.getElementById('pause-button').style.display = 'inline-block';
             document.getElementById('test-section').style.display = 'block';
-
-            // Start the timer
+            document.getElementById('custom-time').style.display = 'none';
+            document.querySelector('label[for="custom-time"]').style.display = 'none';
             startTimer();
-
-            // Show the first date
             showNewDate();
+        });
+
+        document.getElementById('pause-button').addEventListener('click', function () {
+            if (isPaused) {
+                startTimer();
+                isPaused = false;
+                dateDisplay.style.display = 'block';
+                questionArea.style.display = 'block';
+                this.innerText = "Pause";
+            } else {
+                if (pauseCount < maxPauses) {
+                    clearInterval(timerInterval);
+                    isPaused = true;
+                    dateDisplay.style.display = 'none';
+                    questionArea.style.display = 'none';
+                    pauseCount++;
+                    document.getElementById('pause-remaining').innerText = `Pauses Remaining: ${maxPauses - pauseCount}`;
+                    this.innerText = "Resume";
+                } else {
+                    alert("You have used all your pauses.");
+                }
+            }
         });
 
         // Update timer display
@@ -181,9 +222,12 @@
             document.getElementById('give-up').classList.add('hidden');
             timerElement.classList.add('hidden');
             submissionCountElement.classList.add('hidden');
+            document.getElementById('pause-button').style.display = 'none';
             resultElement.classList.remove('hidden');
             scoreElement.innerHTML = `<b>Your score: ${correctAnswers} correct answers!</b>`;
             timeLeftElement.innerHTML = `<b>Time left: ${(Math.floor(timeRemaining / 60000))}:${(Math.floor((timeRemaining % 60000) / 1000)).toString().padStart(2, '0')}</b>`;
+            document.getElementById('custom-time').style.display = 'inline-block';
+            document.querySelector('label[for="custom-time"]').style.display = 'inline-block';
             showReport();
         }
 
