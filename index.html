@@ -1,867 +1,1121 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Day of the Week Calculator</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #2563eb;
-      --secondary: #64748b;
-      --success: #059669;
-      --warning: #d97706;
-      --danger: #dc2626;
-      --info: #0284c7;
-      --bg-light: #f8fafc;
-      --bg-card: #ffffff;
-      --border: #e2e8f0;
-      --text: #1e293b;
-      --text-muted: #64748b;
-    }
-    
-    [data-theme="dark"] {
-      --bg-light: #0f172a;
-      --bg-card: #1e293b;
-      --border: #334155;
-      --text: #e2e8f0;
-      --text-muted: #94a3b8;
-    }
-    
-    * {
-      transition: background-color 0.2s ease, color 0.2s ease;
-    }
-    
-    body {
-      background: var(--bg-light);
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: var(--text);
-    }
-    
-    .hero {
-      padding: 2rem 0;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 2rem;
-    }
-    
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    
-    .nav-pills {
-      background: var(--bg-card);
-      border-radius: 8px;
-      padding: 0.25rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid var(--border);
-      display: inline-flex;
-      margin: 2rem auto;
-    }
-    
-    .nav-pills .nav-link {
-      border-radius: 6px;
-      padding: 0.5rem 1.5rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      border: none;
-    }
-    
-    .nav-pills .nav-link.active {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-    
-    .card h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--text);
-    }
-    
-    .card h4 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-      color: var(--text);
-    }
-    
-    .anchor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-    
-    .anchor-card {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      border-radius: 6px;
-      text-align: center;
-    }
-    
-    .anchor-card .month {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .anchor-card .date {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0.5rem 0;
-    }
-    
-    .anchor-card .mnemonic {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-    
-    .interactive-example {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 2rem;
-      margin: 2rem 0;
-    }
-    
-    .step-indicator {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      gap: 0.5rem;
-    }
-    
-    .step {
-      flex: 1;
-      text-align: center;
-      position: relative;
-      padding: 0.5rem;
-    }
-    
-    .step::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      right: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--border);
-      z-index: -1;
-    }
-    
-    .step:last-child::after {
-      display: none;
-    }
-    
-    .step-circle {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 2px solid var(--border);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 0.5rem;
-      font-weight: 600;
-    }
-    
-    .step.active .step-circle {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-    
-    .step.completed .step-circle {
-      background: var(--success);
-      border-color: var(--success);
-      color: white;
-    }
-    
-    .step small {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-    
-    .btn-secondary {
-      background: var(--secondary);
-      color: white;
-      border: none;
-      padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    
-    .btn-secondary:hover {
-      background: #475569;
-    }
-    
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    
-    .btn-danger:hover {
-      background: #b91c1c;
-    }
-    
-    .btn-warning {
-      background: var(--warning);
-      color: white;
-      border: none;
-      padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    
-    .date-input {
-      font-size: 1.25rem;
-      text-align: center;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      padding: 0.75rem;
-      max-width: 300px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      color: var(--text);
-    }
-    
-    .result-display {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      border-radius: 6px;
-      text-align: center;
-      margin-top: 2rem;
-    }
-    
-    .result-display .day {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0.5rem 0;
-    }
-    
-    .test-container {
-      text-align: center;
-    }
-    
-    .date-question {
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--text);
-      margin: 2rem 0;
-    }
-    
-    .answer-input {
-      font-size: 1.25rem;
-      padding: 0.75rem 1.5rem;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      max-width: 300px;
-      margin: 1rem auto;
-      text-align: center;
-      background: var(--bg-card);
-      color: var(--text);
-    }
-    
-    .answer-input:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-    
-    .timer {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--danger);
-      margin: 1rem 0;
-    }
-    
-    .score-badge {
-      background: var(--success);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      display: inline-block;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0.5rem;
-    }
-    
-    .score-badge.info {
-      background: var(--info);
-    }
-    
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
-      border-radius: 6px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      z-index: 1000;
-    }
-    
-    .theme-toggle:hover {
-      background: var(--bg-light);
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-    }
-    
-    th, td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    th {
-      background: var(--bg-light);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .correct {
-      color: var(--success);
-      font-weight: 600;
-    }
-    
-    .incorrect {
-      color: var(--danger);
-      font-weight: 600;
-    }
-    
-    footer {
-      text-align: center;
-      padding: 2rem;
-      margin-top: 4rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border);
-    }
-    
-    footer a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    
-    footer a:hover {
-      text-decoration: underline;
-    }
-    
-    .calculation-step {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      border-radius: 6px;
-      margin: 1rem 0;
-      text-align: left;
-    }
-    
-    .calculation-step h4 {
-      margin-top: 0;
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    
-    .highlight {
-      background: #fef08a;
-      padding: 0.125rem 0.375rem;
-      border-radius: 3px;
-      font-weight: 600;
-      color: #854d0e;
-    }
-    
-    [data-theme="dark"] .highlight {
-      background: #713f12;
-      color: #fef08a;
-    }
-  </style>
-</head>
-<body>
-  <button class="theme-toggle" id="themeToggle">
-    <i class="bi bi-sun-fill"></i>
-  </button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day of the Week Calculator</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2563eb;
+        --secondary: #64748b;
+        --success: #059669;
+        --warning: #d97706;
+        --danger: #dc2626;
+        --info: #0284c7;
+        --bg-light: #f8fafc;
+        --bg-card: #ffffff;
+        --border: #e2e8f0;
+        --text: #1e293b;
+        --text-muted: #64748b;
+      }
 
-  <div class="container">
-    <div class="hero">
-      <h1>Day of the Week Calculator</h1>
-      <p>Learn to calculate any weekday from 1900-2099 using mental math</p>
-      <p>Also check out this cool <a href="https://weekdaywidget.netlify.app/" target="_blank">Weekday Widget</a> tool from Jasper Murphy. </p>
-    </div>
-    <div class="d-flex justify-content-center">
-      <ul class="nav nav-pills" id="mainNav" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#learn">Learn</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#calculator">Calculator</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#test">Test Yourself</button>
-        </li>
-      </ul>
-    </div>
+      * {
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
 
-    <div class="tab-content" id="mainContent">
-      <!-- Learn Tab -->
-      <div class="tab-pane fade show active" id="learn">
-        <div class="card">
-          <h2>Why Learn This?</h2>
-          <div class="row mt-4">
-            <div class="col-md-6">
-              <h4>Impressive Party Trick</h4>
-              <p>Instantly calculate the weekday someone was born on from their birthdate.</p>
-            </div>
-            <div class="col-md-6">
-              <h4>Historical Context</h4>
-              <p>Quickly determine what day of the week historical events occurred.</p>
-            </div>
-            <div class="col-md-6">
-              <h4>Planning Tool</h4>
-              <p>Find out which days your birthday or important dates fall on in future years.</p>
-            </div>
-            <div class="col-md-6">
-              <h4>Mental Math Practice</h4>
-              <p>Keep your arithmetic skills sharp with practical applications.</p>
-            </div>
-          </div>
-        </div>
+      body {
+        background: var(--bg-light);
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        color: var(--text);
+      }
 
-        <div class="card">
-          <h2>How Does This Work?</h2>
-          <p>Before diving into the steps, let's understand the mathematical foundation behind this method.</p>
-          
-          <h4 class="mt-4">The Core Concept: Modular Arithmetic</h4>
-          <p>Days of the week repeat in cycles of 7. If today is Monday, then 7 days from now is also Monday. This is called <strong>modular arithmetic</strong> (mod 7). Every calculation we do boils down to: "How many days away from a reference point are we?"</p>
-          
-          <h4 class="mt-3">Why Anchor Dates?</h4>
-          <p>Here's the brilliant part: <strong>In any given year, certain dates always fall on the same weekday</strong>. For example, in 2024, March 14th, April 4th, May 9th, June 6th, and several other dates all fall on Thursday. These are our "anchor dates."</p>
-          <p>Once you know what day the anchor dates fall on for a particular year, you can easily calculate any other date by counting forward or backward!</p>
-          
-          <h4 class="mt-3">Why All The Year Calculations?</h4>
-          <p>The tricky part is figuring out what day of the week the anchor dates fall on for any given year. This changes because:</p>
-          <ul>
-            <li><strong>Regular years add 1 day:</strong> 365 days = 52 weeks + 1 day, so anchor dates shift forward by 1 day each year</li>
-            <li><strong>Leap years add 2 days:</strong> 366 days = 52 weeks + 2 days, so anchor dates shift forward by 2 days</li>
-            <li><strong>Century patterns:</strong> The calendar has predictable patterns every 100 and 400 years due to leap year rules</li>
-          </ul>
-          
-          <p>The formula breaks down the year calculations into manageable chunks:</p>
-          <ul>
-            <li><strong>Quotient ÷ 12:</strong> Counts groups of 12 years (which conveniently add up to cycles we can simplify)</li>
-            <li><strong>Remainder % 12:</strong> Handles the leftover years</li>
-            <li><strong>Remainder ÷ 4:</strong> Accounts for the leap years within those leftover years</li>
-            <li><strong>Century modifier:</strong> Adjusts for the 100/400 year century patterns</li>
-          </ul>
-          
-          <p class="mt-3"><em>In essence: We're calculating how many days the anchor dates have shifted from a known starting point, then using simple addition and subtraction to find any specific date!</em></p>
-        </div>
+      .hero {
+        padding: 2rem 0;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
 
-        <div class="card">
-          <h2>Step 1: Memorize the Anchor Dates</h2>
-          <p>Each month has an "anchor date" - a specific day that makes calculations easy. All anchor dates fall on the same weekday in any given year!</p>
-          
-          <div class="anchor-grid">
-            <div class="anchor-card">
-              <div class="month">January</div>
-              <div class="date">1/3</div>
-              <div class="mnemonic">(1/4 in leap years)</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">February</div>
-              <div class="date">2/28</div>
-              <div class="mnemonic">(2/29 in leap years)</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">March</div>
-              <div class="date">3/14</div>
-              <div class="mnemonic">Pi Day</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">April</div>
-              <div class="date">4/4</div>
-              <div class="mnemonic">Easy pattern</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">May</div>
-              <div class="date">5/9</div>
-              <div class="mnemonic">9-to-5 work</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">June</div>
-              <div class="date">6/6</div>
-              <div class="mnemonic">Easy pattern</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">July</div>
-              <div class="date">7/11</div>
-              <div class="mnemonic">7-Eleven store</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">August</div>
-              <div class="date">8/8</div>
-              <div class="mnemonic">Easy pattern</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">September</div>
-              <div class="date">9/5</div>
-              <div class="mnemonic">Dolly Parton (9-to-5)</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">October</div>
-              <div class="date">10/10</div>
-              <div class="mnemonic">Perfect 10!</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">November</div>
-              <div class="date">11/7</div>
-              <div class="mnemonic">Lucky 7-11</div>
-            </div>
-            <div class="anchor-card">
-              <div class="month">December</div>
-              <div class="date">12/12</div>
-              <div class="mnemonic">Easy pattern</div>
-            </div>
-          </div>
-        </div>
+      .hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
 
-        <div class="card">
-          <h2>The 5-Step Method</h2>
-          <p>Once you know the anchor dates, follow these steps:</p>
-          
-          <div class="interactive-example">
-            <h3>Interactive Example: December 2, 1965</h3>
-            <button class="btn-primary mb-3" onclick="startInteractiveExample()">Walk Through Example</button>
-            
-            <div id="interactiveSteps" style="display: none;">
-              <div class="step-indicator">
-                <div class="step" id="step1">
-                  <div class="step-circle">1</div>
-                  <small>Anchor</small>
-                </div>
-                <div class="step" id="step2">
-                  <div class="step-circle">2</div>
-                  <small>Difference</small>
-                </div>
-                <div class="step" id="step3">
-                  <div class="step-circle">3</div>
-                  <small>Century</small>
-                </div>
-                <div class="step" id="step4">
-                  <div class="step-circle">4</div>
-                  <small>Year Calc</small>
-                </div>
-                <div class="step" id="step5">
-                  <div class="step-circle">5</div>
-                  <small>Add Up</small>
-                </div>
-              </div>
-              
-              <div id="stepContent"></div>
-              
-              <div class="mt-3">
-                <button class="btn-primary" onclick="nextStep()">Next Step</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-        <div class="card">
-          <h2>💡 Quick Reference</h2>
-          <div class="row">
-            <div class="col-md-6">
-              <h4>Leap Year Rules</h4>
-              <ol>
-                <li>Divisible by 4? → Leap year</li>
-                <li>Divisible by 100? → Not a leap year</li>
-                <li>Divisible by 400? → Leap year anyway!</li>
-              </ol>
-            </div>
-            <div class="col-md-6">
-              <h4>Day Numbers</h4>
-              <ul>
-                <li>0 = Sunday</li>
-                <li>1 = Monday</li>
-                <li>2 = Tuesday</li>
-                <li>3 = Wednesday</li>
-                <li>4 = Thursday</li>
-                <li>5 = Friday</li>
-                <li>6 = Saturday</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      .nav-pills {
+        background: var(--bg-card);
+        border-radius: 8px;
+        padding: 0.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border);
+        display: inline-flex;
+        margin: 2rem auto;
+      }
+
+      .nav-pills .nav-link {
+        border-radius: 6px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        border: none;
+      }
+
+      .nav-pills .nav-link.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .card h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text);
+      }
+
+      .card h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: var(--text);
+      }
+
+      .anchor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .anchor-card {
+        background: var(--bg-light);
+        border: 1px solid var(--border);
+        padding: 1rem;
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      .anchor-card .month {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .anchor-card .date {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0.5rem 0;
+      }
+
+      .anchor-card .mnemonic {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .interactive-example {
+        background: var(--bg-light);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+
+      .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        gap: 0.5rem;
+      }
+
+      .step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        padding: 0.5rem;
+      }
+
+      .step::after {
+        content: "";
+        position: absolute;
+        top: 20px;
+        right: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--border);
+        z-index: -1;
+      }
+
+      .step:last-child::after {
+        display: none;
+      }
+
+      .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        border: 2px solid var(--border);
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-weight: 600;
+      }
+
+      .step.active .step-circle {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+
+      .step.completed .step-circle {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+      }
+
+      .step small {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      .btn-secondary {
+        background: var(--secondary);
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-secondary:hover {
+        background: #475569;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-danger:hover {
+        background: #b91c1c;
+      }
+
+      .btn-warning {
+        background: var(--warning);
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .date-input {
+        font-size: 1.25rem;
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 0.75rem;
+        max-width: 300px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        color: var(--text);
+      }
+
+      .result-display {
+        background: var(--bg-light);
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        border-radius: 6px;
+        text-align: center;
+        margin-top: 2rem;
+      }
+
+      .result-display .day {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0.5rem 0;
+      }
+
+      .test-container {
+        text-align: center;
+      }
+
+      .date-question {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 2rem 0;
+      }
+
+      .answer-input {
+        font-size: 1.25rem;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        max-width: 300px;
+        margin: 1rem auto;
+        text-align: center;
+        background: var(--bg-card);
+        color: var(--text);
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .timer {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--danger);
+        margin: 1rem 0;
+      }
+
+      .score-badge {
+        background: var(--success);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        display: inline-block;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0.5rem;
+      }
+
+      .score-badge.info {
+        background: var(--info);
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        border-radius: 6px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 1000;
+      }
+
+      .theme-toggle:hover {
+        background: var(--bg-light);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1.5rem;
+      }
+
+      th,
+      td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        background: var(--bg-light);
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .correct {
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      .incorrect {
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        margin-top: 4rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
+
+      footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      .calculation-step {
+        background: var(--bg-light);
+        border: 1px solid var(--border);
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        text-align: left;
+      }
+
+      .calculation-step h4 {
+        margin-top: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .highlight {
+        background: #fef08a;
+        padding: 0.125rem 0.375rem;
+        border-radius: 3px;
+        font-weight: 600;
+        color: #854d0e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>Day of the Week Calculator</h1>
+        <p>Learn to calculate any weekday from 1900-2099 using mental math</p>
+        <p>
+          Also check out this cool
+          <a href="https://weekdaywidget.netlify.app/" target="_blank"
+            >Weekday Widget</a
+          >
+          tool from Jasper Murphy.
+        </p>
+      </div>
+      <div class="d-flex justify-content-center">
+        <ul class="nav nav-pills" id="mainNav" role="tablist">
+          <li class="nav-item">
+            <button
+              class="nav-link active"
+              data-bs-toggle="pill"
+              data-bs-target="#learn"
+            >
+              Learn
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="pill"
+              data-bs-target="#calculator"
+            >
+              Calculator
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="pill"
+              data-bs-target="#test"
+            >
+              Test Yourself
+            </button>
+          </li>
+        </ul>
       </div>
 
-      <!-- Calculator Tab -->
-      <div class="tab-pane fade" id="calculator">
-        <div class="card">
-          <h2 class="text-center">🧮 Day Calculator</h2>
-          <p class="text-center">Enter any date and see the step-by-step calculation!</p>
-          
-          <div class="text-center my-4">
-            <input type="date" id="calcDate" class="date-input" min="1900-01-01" max="2099-12-31">
-            <br><br>
-            <button class="btn-playful" onclick="calculateDay()">Calculate!</button>
-          </div>
-          
-          <div id="calculationResult"></div>
-        </div>
-      </div>
-
-      <!-- Test Tab -->
-      <div class="tab-pane fade" id="test">
-        <div class="card">
-          <div class="test-container">
-            <h2>⏱️ Challenge Yourself!</h2>
-            <p>See how many dates you can get right in the time limit!</p>
-            
-            <div id="testSetup">
-              <label for="timeLimit">Time Limit (minutes):</label><br>
-              <input type="number" id="timeLimit" value="5" min="1" max="30" style="font-size: 1.2rem; padding: 0.5rem; margin: 1rem; width: 100px; text-align: center; border-radius: 10px;">
-              <br>
-              <button class="btn-playful" onclick="startTest()">Start Test!</button>
-            </div>
-            
-            <div id="testActive" style="display: none;">
-              <div class="timer" id="timer">5:00</div>
-              <div class="score-badge">Score: <span id="score">0</span></div>
-              <div class="score-badge" style="background: linear-gradient(135deg, var(--info), #2563eb);">
-                Total: <span id="totalAttempts">0</span>
+      <div class="tab-content" id="mainContent">
+        <!-- Learn Tab -->
+        <div class="tab-pane fade show active" id="learn">
+          <div class="card">
+            <h2>Why Learn This?</h2>
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <h4>Impressive Party Trick</h4>
+                <p>
+                  Instantly calculate the weekday someone was born on from their
+                  birthdate.
+                </p>
               </div>
-              <div class="date-question" id="testDate"></div>
-              
-              <input list="daysList" id="answerInput" class="answer-input" placeholder="Monday" autocomplete="off">
-              <datalist id="daysList">
-                <option value="Monday">
-                <option value="Tuesday">
-                <option value="Wednesday">
-                <option value="Thursday">
-                <option value="Friday">
-                <option value="Saturday">
-                <option value="Sunday">
-              </datalist>
-              <br>
-              <button class="btn-playful" onclick="submitAnswer()">Submit</button>
-              <button class="btn-playful" style="background: linear-gradient(135deg, #64748b, #475569);" onclick="skipQuestion()">Skip</button>
-              <button class="btn-playful" style="background: linear-gradient(135deg, var(--danger), #dc2626);" onclick="endTest()">Give Up</button>
-              
-              <div id="pauseContainer" style="margin-top: 2rem;">
-                <button class="btn-playful" style="background: linear-gradient(135deg, var(--warning), #d97706);" onclick="togglePause()">
-                  <span id="pauseText">⏸ Pause</span>
+              <div class="col-md-6">
+                <h4>Historical Context</h4>
+                <p>
+                  Quickly determine what day of the week historical events
+                  occurred.
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h4>Planning Tool</h4>
+                <p>
+                  Find out which days your birthday or important dates fall on
+                  in future years.
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h4>Mental Math Practice</h4>
+                <p>
+                  Keep your arithmetic skills sharp with practical applications.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>How Does This Work?</h2>
+            <p>
+              Before diving into the steps, let's understand the mathematical
+              foundation behind this method.
+            </p>
+
+            <h4 class="mt-4">The Core Concept: Modular Arithmetic</h4>
+            <p>
+              Days of the week repeat in cycles of 7. If today is Monday, then 7
+              days from now is also Monday. This is called
+              <strong>modular arithmetic</strong> (mod 7). Every calculation we
+              do boils down to: "How many days away from a reference point are
+              we?"
+            </p>
+
+            <h4 class="mt-3">Why Anchor Dates?</h4>
+            <p>
+              Here's the brilliant part:
+              <strong
+                >In any given year, certain dates always fall on the same
+                weekday</strong
+              >. For example, in 2024, March 14th, April 4th, May 9th, June 6th,
+              and several other dates all fall on Thursday. These are our
+              "anchor dates."
+            </p>
+            <p>
+              Once you know what day the anchor dates fall on for a particular
+              year, you can easily calculate any other date by counting forward
+              or backward!
+            </p>
+
+            <h4 class="mt-3">The Formula Broken Down</h4>
+            <p>
+              The calculation combines these elements to find the exact shift:
+            </p>
+            <ul>
+              <li>
+                <strong>Quotient ÷ 12:</strong> Measures the 12-year cycles
+                (each cycle adds just 1 day).
+              </li>
+              <li>
+                <strong>Remainder % 12:</strong> Handles the leftover years
+                (adds 1 day per year).
+              </li>
+              <li>
+                <strong>Remainder ÷ 4:</strong> Accounts for the leap years
+                within those leftover years.
+              </li>
+              <li>
+                <strong>Century modifier:</strong> Adjusts for the 400-year
+                Gregorian cycle.
+              </li>
+            </ul>
+            <h4 class="mt-3">The Magic Number 12</h4>
+            <p>
+              You might wonder why the formula asks you to divide the year by
+              12. It is a clever shortcut to keep the numbers small!
+            </p>
+            <div class="p-3 bg-light border rounded">
+              <p class="mb-0">
+                <strong>Why it works:</strong> In a 12-year span, the calendar
+                shifts forward by <strong>15 days</strong> (12 regular years + 3
+                leap years). Because 15 days is exactly
+                <em>2 full weeks plus 1 day</em>, we can ignore the weeks.
+              </p>
+              <p class="mt-2 mb-0">
+                <strong>The Result:</strong> The "Doomsday" shifts by exactly
+                <strong>1 day</strong> for every <strong>12 years</strong>. This
+                allows you to simply count the "12's" of years rather than doing
+                complex multiplication.
+              </p>
+            </div>
+            <hr class="my-4" />
+
+            <h4>Example: The Year 1988</h4>
+            <p>
+              Let's compare the methods using <strong>1988</strong>. (Note: The
+              1900s Anchor Day is Wednesday, which = 3).
+            </p>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card bg-light border-secondary mb-3">
+                  <div class="card-header text-center">
+                    <strong>The Hard Way (Traditional)</strong>
+                  </div>
+                  <div class="card-body">
+                    <p class="small mb-1">
+                      Formula: Anchor + Year + (Year ÷ 4)
+                    </p>
+                    <code class="d-block text-center mb-2"
+                      >3 + 88 + (88 ÷ 4)</code
+                    >
+                    <p class="card-text">
+                      You calculate 88 ÷ 4 = 22.<br />
+                      Sum: <strong>3 + 88 + 22 = 113</strong><br />
+                      <em>Now try calculating 113 mod 7 in your head...</em
+                      ><br />
+                      113 ÷ 7 = 16 R <strong>1</strong>
+                    </p>
+                    <div class="text-center fw-bold text-muted">
+                      Result: 1 (Monday)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card border-success mb-3">
+                  <div class="card-header text-center bg-success text-white">
+                    <strong>The Easy Way (divide by 12)</strong>
+                  </div>
+                  <div class="card-body">
+                    <p class="small mb-1">
+                      Formula: Anchor + 12's + Rem + (Rem ÷ 4)
+                    </p>
+                    <code class="d-block text-center mb-2">3 + 7 + 4 + 1</code>
+                    <p class="card-text">
+                      88 ÷ 12 is <strong>7</strong> (12's) with
+                      <strong>4</strong> left.<br />
+                      4 ÷ 4 is <strong>1</strong> leap year.<br />
+                      Sum: <strong>3 + 7 + 4 + 1 = 15</strong><br />
+                      <em>Much easier!</em> 15 mod 7 is...<br />
+                      15 ÷ 7 = 2 R <strong>1</strong>
+                    </p>
+                    <div class="text-center fw-bold text-success">
+                      Result: 1 (Monday)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 text-center font-italic">
+              Both methods give the same answer, but the divide by 12 method
+              keeps the sum (15) small enough to calculate instantly!
+            </p>
+          </div>
+          <div class="card">
+            <h2>Step 1: Memorize the Anchor Dates</h2>
+            <p>
+              Each month has an "anchor date" - a specific day that makes
+              calculations easy. All anchor dates fall on the same weekday in
+              any given year!
+            </p>
+
+            <div class="anchor-grid">
+              <div class="anchor-card">
+                <div class="month">January</div>
+                <div class="date">1/3</div>
+                <div class="mnemonic">(1/4 in leap years)</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">February</div>
+                <div class="date">2/28</div>
+                <div class="mnemonic">(2/29 in leap years)</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">March</div>
+                <div class="date">3/14</div>
+                <div class="mnemonic">Pi Day</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">April</div>
+                <div class="date">4/4</div>
+                <div class="mnemonic">Easy pattern</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">May</div>
+                <div class="date">5/9</div>
+                <div class="mnemonic">9-to-5 work</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">June</div>
+                <div class="date">6/6</div>
+                <div class="mnemonic">Easy pattern</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">July</div>
+                <div class="date">7/11</div>
+                <div class="mnemonic">7-Eleven store</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">August</div>
+                <div class="date">8/8</div>
+                <div class="mnemonic">Easy pattern</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">September</div>
+                <div class="date">9/5</div>
+                <div class="mnemonic">Dolly Parton (9-to-5)</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">October</div>
+                <div class="date">10/10</div>
+                <div class="mnemonic">Perfect 10!</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">November</div>
+                <div class="date">11/7</div>
+                <div class="mnemonic">Lucky 7-11</div>
+              </div>
+              <div class="anchor-card">
+                <div class="month">December</div>
+                <div class="date">12/12</div>
+                <div class="mnemonic">Easy pattern</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>The 5-Step Method</h2>
+            <p>Once you know the anchor dates, follow these steps:</p>
+
+            <div class="interactive-example">
+              <h3>Interactive Example: December 2, 1965</h3>
+              <button
+                class="btn-primary mb-3"
+                onclick="startInteractiveExample()"
+              >
+                Walk Through Example
+              </button>
+
+              <div id="interactiveSteps" style="display: none">
+                <div class="step-indicator">
+                  <div class="step" id="step1">
+                    <div class="step-circle">1</div>
+                    <small>Anchor</small>
+                  </div>
+                  <div class="step" id="step2">
+                    <div class="step-circle">2</div>
+                    <small>Difference</small>
+                  </div>
+                  <div class="step" id="step3">
+                    <div class="step-circle">3</div>
+                    <small>Century</small>
+                  </div>
+                  <div class="step" id="step4">
+                    <div class="step-circle">4</div>
+                    <small>Year Calc</small>
+                  </div>
+                  <div class="step" id="step5">
+                    <div class="step-circle">5</div>
+                    <small>Add Up</small>
+                  </div>
+                </div>
+
+                <div id="stepContent"></div>
+
+                <div class="mt-3">
+                  <button class="btn-primary" onclick="nextStep()">
+                    Next Step
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>💡 Quick Reference</h2>
+            <div class="row">
+              <div class="col-md-6">
+                <h4>Leap Year Rules</h4>
+                <ol>
+                  <li>Divisible by 4? → Leap year</li>
+                  <li>Divisible by 100? → Not a leap year</li>
+                  <li>Divisible by 400? → Leap year anyway!</li>
+                </ol>
+              </div>
+              <div class="col-md-6">
+                <h4>Day Numbers</h4>
+                <ul>
+                  <li>0 = Sunday</li>
+                  <li>1 = Monday</li>
+                  <li>2 = Tuesday</li>
+                  <li>3 = Wednesday</li>
+                  <li>4 = Thursday</li>
+                  <li>5 = Friday</li>
+                  <li>6 = Saturday</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator Tab -->
+        <div class="tab-pane fade" id="calculator">
+          <div class="card">
+            <h2 class="text-center">🧮 Day Calculator</h2>
+            <p class="text-center">
+              Enter any date and see the step-by-step calculation!
+            </p>
+
+            <div class="text-center my-4">
+              <input
+                type="date"
+                id="calcDate"
+                class="date-input"
+                min="1900-01-01"
+                max="2099-12-31"
+              />
+              <br /><br />
+              <button class="btn-primary mb-3" onclick="calculateDay()">
+                Calculate!
+              </button>
+            </div>
+
+            <div id="calculationResult"></div>
+          </div>
+        </div>
+
+        <!-- Test Tab -->
+        <div class="tab-pane fade" id="test">
+          <div class="card">
+            <div class="test-container">
+              <h2>⏱️ Challenge Yourself!</h2>
+              <p>See how many dates you can get right in the time limit!</p>
+
+              <div id="testSetup">
+                <label for="timeLimit">Time Limit (minutes):</label><br />
+                <input
+                  type="number"
+                  id="timeLimit"
+                  value="5"
+                  min="1"
+                  max="30"
+                  style="
+                    font-size: 1.2rem;
+                    padding: 0.5rem;
+                    margin: 1rem;
+                    width: 100px;
+                    text-align: center;
+                    border-radius: 10px;
+                  "
+                />
+                <br />
+                <button class="btn-primary mb-3" onclick="startTest()">
+                  Start Test!
                 </button>
-                <div style="margin-top: 0.5rem; color: #64748b;">
-                  Pauses remaining: <span id="pausesLeft">3</span>
+              </div>
+
+              <div id="testActive" style="display: none">
+                <div class="timer" id="timer">5:00</div>
+                <div class="score-badge">Score: <span id="score">0</span></div>
+                <div
+                  class="score-badge"
+                  style="
+                    background: linear-gradient(135deg, var(--info), #2563eb);
+                  "
+                >
+                  Total: <span id="totalAttempts">0</span>
+                </div>
+                <div class="date-question" id="testDate"></div>
+
+                <input
+                  list="daysList"
+                  id="answerInput"
+                  class="answer-input"
+                  placeholder="Monday"
+                  autocomplete="off"
+                />
+                <datalist id="daysList">
+                  <option value="Monday"></option>
+                  <option value="Tuesday"></option>
+                  <option value="Wednesday"></option>
+                  <option value="Thursday"></option>
+                  <option value="Friday"></option>
+                  <option value="Saturday"></option>
+                  <option value="Sunday"></option>
+                </datalist>
+
+                <br />
+                <button class="btn btn-primary" onclick="submitAnswer()">
+                  Submit
+                </button>
+                <button
+                  class="btn"
+                  style="background: linear-gradient(135deg, #64748b, #475569)"
+                  onclick="skipQuestion()"
+                >
+                  Skip
+                </button>
+                <button
+                  class="btn"
+                  style="
+                    background: linear-gradient(135deg, var(--danger), #dc2626);
+                  "
+                  onclick="endTest()"
+                >
+                  Give Up
+                </button>
+
+                <div id="pauseContainer" style="margin-top: 2rem">
+                  <button
+                    class="btn"
+                    style="
+                      background: linear-gradient(
+                        135deg,
+                        var(--warning),
+                        #d97706
+                      );
+                    "
+                    onclick="togglePause()"
+                  >
+                    <span id="pauseText">⏸ Pause</span>
+                  </button>
+                  <div style="margin-top: 0.5rem; color: #64748b">
+                    Pauses remaining: <span id="pausesLeft">3</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div id="testResults" style="display: none;">
-              <h3>📊 Your Results</h3>
-              <div class="score-badge" style="font-size: 2rem;">
-                Final Score: <span id="finalScore">0</span>/<span id="finalTotal">0</span>
+
+              <div id="testResults" style="display: none">
+                <h3>📊 Your Results</h3>
+                <div class="score-badge" style="font-size: 2rem">
+                  Final Score: <span id="finalScore">0</span>/<span
+                    id="finalTotal"
+                    >0</span
+                  >
+                </div>
+                <div id="resultsTable"></div>
+                <button class="btn btn-primary" onclick="location.reload()">
+                  Try Again
+                </button>
               </div>
-              <div id="resultsTable"></div>
-              <button class="btn-playful" onclick="location.reload()">Try Again</button>
             </div>
           </div>
         </div>
       </div>
+      <footer>
+        <p>
+          Made with 💜 by
+          <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a>
+        </p>
+        <p>
+          <a
+            href="https://ko-fi.com/scheerapps"
+            target="_blank"
+            rel="noopener"
+            title="Support me on Ko-fi"
+          >
+            <img
+              height="36"
+              style="border: 0px; height: 36px"
+              src="https://storage.ko-fi.com/cdn/kofi5.png?v=6"
+              border="0"
+              alt="Buy Me a Coffee at ko-fi.com"
+            />
+          </a>
+        </p>
+        <p>
+          <a href="https://github.com/kyletscheer/weekdays" target="_blank"
+            >View Code on GitHub</a
+          >
+        </p>
+      </footer>
     </div>
 
-    <p>
-      <p>Made with 💜 by <a href="https://www.kylescheer.com" target="_blank">Kyle Scheer</a></p>
-      <p><a href='https://ko-fi.com/scheerapps' target='_blank' rel="noopener" title="Support me on Ko-fi">
-            <img height='36' style='border:0px;height:36px;'
-            src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0'
-            alt='Buy Me a Coffee at ko-fi.com' />
-        </a></p>
-      <p><a href="https://github.com/kyletscheer/weekdays" target="_blank">View Code on GitHub</a></p>
-    </footer>
-  </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Interactive Example
+      let currentStep = 0;
+      const exampleSteps = [
+        {
+          title: "Step 1: Find the Anchor Date",
+          content:
+            "For December, the anchor date is <span class='highlight'>12/12</span>. All anchor dates fall on the same weekday in any year!",
+        },
+        {
+          title: "Step 2: Calculate the Difference",
+          content:
+            "Our date is 12/2. The difference from 12/12 is:<br><span class='highlight'>2 - 12 = -10</span><br>Now divide by 7 and keep remainder: <span class='highlight'>-10 % 7 = -3</span>",
+        },
+        {
+          title: "Step 3: Century Modifier",
+          content:
+            "1965 is in the 1900s, so the century modifier is <span class='highlight'>3</span>.<br>(For 2000s, it would be 2)",
+        },
+        {
+          title: "Step 4: Year Calculations",
+          content:
+            "Last 2 digits of 1965 = <span class='highlight'>65</span><br>Quotient: 65 ÷ 12 = <span class='highlight'>5</span><br>Remainder: 65 % 12 = <span class='highlight'>5</span><br>Remainder ÷ 4: 5 ÷ 4 = <span class='highlight'>1</span>",
+        },
+        {
+          title: "Step 5: Add It All Up!",
+          content:
+            "-3 + 3 + 5 + 5 + 1 = <span class='highlight'>11</span><br>11 % 7 = <span class='highlight'>4</span><br><br>4 = Thursday!<br><br><h3 style='color: var(--success);'>🎉 December 2, 1965 was a Thursday!</h3>",
+        },
+      ];
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Theme Toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const html = document.documentElement;
-    
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', newTheme);
-      themeToggle.innerHTML = newTheme === 'dark' ? '<i class="bi bi-moon-fill"></i>' : '<i class="bi bi-sun-fill"></i>';
-    });
-
-    // Interactive Example
-    let currentStep = 0;
-    const exampleSteps = [
-      {
-        title: "Step 1: Find the Anchor Date",
-        content: "For December, the anchor date is <span class='highlight'>12/12</span>. All anchor dates fall on the same weekday in any year!"
-      },
-      {
-        title: "Step 2: Calculate the Difference",
-        content: "Our date is 12/2. The difference from 12/12 is:<br><span class='highlight'>2 - 12 = -10</span><br>Now divide by 7 and keep remainder: <span class='highlight'>-10 % 7 = -3</span>"
-      },
-      {
-        title: "Step 3: Century Modifier",
-        content: "1965 is in the 1900s, so the century modifier is <span class='highlight'>3</span>.<br>(For 2000s, it would be 2)"
-      },
-      {
-        title: "Step 4: Year Calculations",
-        content: "Last 2 digits of 1965 = <span class='highlight'>65</span><br>Quotient: 65 ÷ 12 = <span class='highlight'>5</span><br>Remainder: 65 % 12 = <span class='highlight'>5</span><br>Remainder ÷ 4: 5 ÷ 4 = <span class='highlight'>1</span>"
-      },
-      {
-        title: "Step 5: Add It All Up!",
-        content: "-3 + 3 + 5 + 5 + 1 = <span class='highlight'>11</span><br>11 % 7 = <span class='highlight'>4</span><br><br>4 = Thursday!<br><br><h3 style='color: var(--success);'>🎉 December 2, 1965 was a Thursday!</h3>"
+      function startInteractiveExample() {
+        currentStep = 0;
+        document.getElementById("interactiveSteps").style.display = "block";
+        showStep();
       }
-    ];
 
-    function startInteractiveExample() {
-      currentStep = 0;
-      document.getElementById('interactiveSteps').style.display = 'block';
-      showStep();
-    }
+      function showStep() {
+        for (let i = 1; i <= 5; i++) {
+          const stepEl = document.getElementById("step" + i);
+          stepEl.classList.remove("active", "completed");
+          if (i < currentStep + 1) stepEl.classList.add("completed");
+          if (i === currentStep + 1) stepEl.classList.add("active");
+        }
 
-    function showStep() {
-      for (let i = 1; i <= 5; i++) {
-        const stepEl = document.getElementById('step' + i);
-        stepEl.classList.remove('active', 'completed');
-        if (i < currentStep + 1) stepEl.classList.add('completed');
-        if (i === currentStep + 1) stepEl.classList.add('active');
-      }
-      
-      const step = exampleSteps[currentStep];
-      document.getElementById('stepContent').innerHTML = `
+        const step = exampleSteps[currentStep];
+        document.getElementById("stepContent").innerHTML = `
         <div class="calculation-step">
           <h4>${step.title}</h4>
           <p>${step.content}</p>
         </div>
       `;
-    }
-
-    function nextStep() {
-      if (currentStep < exampleSteps.length - 1) {
-        currentStep++;
-        showStep();
       }
-    }
 
-    // Calculator Functions
-    function calculateDayOfWeek(day, month, year) {
-      const anchorDates = {
-        1: (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 4 : 3,
-        2: (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28,
-        3: 14, 4: 4, 5: 9, 6: 6, 7: 11, 8: 8, 9: 5, 10: 10, 11: 7, 12: 12
-      };
-
-      const anchorDate = anchorDates[month];
-      const difference = day - anchorDate;
-      const mod7Difference = difference % 7;
-      const centuryModifier = year >= 2000 ? 2 : 3;
-      const lastTwoDigits = year % 100;
-      const quotient = Math.floor(lastTwoDigits / 12);
-      const remainder = lastTwoDigits % 12;
-      const remainderQuotient = Math.floor(remainder / 4);
-      const sum = quotient + remainder + remainderQuotient + centuryModifier + mod7Difference;
-      const anchorDay = sum % 7;
-
-      const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const finalDay = anchorDay < 0 ? anchorDay + 7 : anchorDay;
-
-      return {
-        dayName: dayNames[finalDay],
-        steps: {
-          anchorDate, mod7Difference, centuryModifier, lastTwoDigits,
-          quotient, remainder, remainderQuotient, sum, finalDay
+      function nextStep() {
+        if (currentStep < exampleSteps.length - 1) {
+          currentStep++;
+          showStep();
         }
-      };
-    }
-
-    function calculateDay() {
-      const dateValue = document.getElementById('calcDate').value;
-      if (!dateValue) {
-        alert('Please select a date!');
-        return;
       }
 
-      const [year, month, day] = dateValue.split('-').map(Number);
-      
-      if (year < 1900 || year > 2099) {
-        alert('Please enter a date between 1900 and 2099!');
-        return;
-      }
-      const result = calculateDayOfWeek(day, month, year);
-      const s = result.steps;
+      // Calculator Functions
+      function calculateDayOfWeek(day, month, year) {
+        const anchorDates = {
+          1: year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 4 : 3,
+          2: year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28,
+          3: 14,
+          4: 4,
+          5: 9,
+          6: 6,
+          7: 11,
+          8: 8,
+          9: 5,
+          10: 10,
+          11: 7,
+          12: 12,
+        };
 
-      document.getElementById('calculationResult').innerHTML = `
+        const anchorDate = anchorDates[month];
+        const difference = day - anchorDate;
+        const mod7Difference = difference % 7;
+        const centuryModifier = year >= 2000 ? 2 : 3;
+        const lastTwoDigits = year % 100;
+        const quotient = Math.floor(lastTwoDigits / 12);
+        const remainder = lastTwoDigits % 12;
+        const remainderQuotient = Math.floor(remainder / 4);
+        const sum =
+          quotient +
+          remainder +
+          remainderQuotient +
+          centuryModifier +
+          mod7Difference;
+        const anchorDay = sum % 7;
+
+        const dayNames = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const finalDay = anchorDay < 0 ? anchorDay + 7 : anchorDay;
+
+        return {
+          dayName: dayNames[finalDay],
+          steps: {
+            anchorDate,
+            mod7Difference,
+            centuryModifier,
+            lastTwoDigits,
+            quotient,
+            remainder,
+            remainderQuotient,
+            sum,
+            finalDay,
+          },
+        };
+      }
+
+      function calculateDay() {
+        const dateValue = document.getElementById("calcDate").value;
+        if (!dateValue) {
+          alert("Please select a date!");
+          return;
+        }
+
+        const [year, month, day] = dateValue.split("-").map(Number);
+
+        if (year < 1900 || year > 2099) {
+          alert("Please enter a date between 1900 and 2099!");
+          return;
+        }
+        const result = calculateDayOfWeek(day, month, year);
+        const s = result.steps;
+
+        document.getElementById("calculationResult").innerHTML = `
         <div class="result-display">
           <div class="day">${result.dayName}!</div>
           <p style="font-size: 1.2rem; color: #059669;">Here's how we got there:</p>
@@ -869,177 +1123,213 @@
         
         <div class="calculation-step">
           <h4>Step 1: Anchor Date</h4>
-          <p>Anchor date for month ${month}: <span class="highlight">${s.anchorDate}</span></p>
-          <p>Difference: (${day} - ${s.anchorDate}) % 7 = <span class="highlight">${s.mod7Difference}</span></p>
+          <p>Anchor date for month ${month}: <span class="highlight">${
+          s.anchorDate
+        }</span></p>
+          <p>Difference: (${day} - ${
+          s.anchorDate
+        }) % 7 = <span class="highlight">${s.mod7Difference}</span></p>
         </div>
         
         <div class="calculation-step">
           <h4>Step 2: Century Modifier</h4>
-          <p>Year ${year} is in the ${year >= 2000 ? '2000s' : '1900s'}</p>
-          <p>Century modifier: <span class="highlight">${s.centuryModifier}</span></p>
+          <p>Year ${year} is in the ${year >= 2000 ? "2000s" : "1900s"}</p>
+          <p>Century modifier: <span class="highlight">${
+            s.centuryModifier
+          }</span></p>
         </div>
         
         <div class="calculation-step">
           <h4>Step 3: Year Calculations</h4>
-          <p>Last two digits: <span class="highlight">${s.lastTwoDigits}</span></p>
+          <p>Last two digits: <span class="highlight">${
+            s.lastTwoDigits
+          }</span></p>
           <p>Quotient (÷12): <span class="highlight">${s.quotient}</span></p>
           <p>Remainder (%12): <span class="highlight">${s.remainder}</span></p>
-          <p>Remainder÷4: <span class="highlight">${s.remainderQuotient}</span></p>
+          <p>Remainder÷4: <span class="highlight">${
+            s.remainderQuotient
+          }</span></p>
         </div>
         
         <div class="calculation-step">
           <h4>Step 4: Sum It Up</h4>
-          <p>${s.mod7Difference} + ${s.centuryModifier} + ${s.quotient} + ${s.remainder} + ${s.remainderQuotient} = <span class="highlight">${s.sum}</span></p>
+          <p>${s.mod7Difference} + ${s.centuryModifier} + ${s.quotient} + ${
+          s.remainder
+        } + ${s.remainderQuotient} = <span class="highlight">${s.sum}</span></p>
           <p>${s.sum} % 7 = <span class="highlight">${s.finalDay}</span></p>
         </div>
         
         <div class="result-display">
-          <h3>🎉 ${month}/${day}/${year} is a <strong>${result.dayName}</strong>!</h3>
+          <h3>🎉 ${month}/${day}/${year} is a <strong>${
+          result.dayName
+        }</strong>!</h3>
         </div>
       `;
-    }
-
-    // Test System
-    let testTimer;
-    let timeRemaining;
-    let testScore = 0;
-    let testTotal = 0;
-    let testAnswers = [];
-    let currentTestDate;
-    let pausesRemaining = 3;
-    let isPaused = false;
-
-    function getRandomDate() {
-      const year = Math.floor(Math.random() * 200) + 1900;
-      const month = Math.floor(Math.random() * 12) + 1;
-      const day = Math.floor(Math.random() * 28) + 1;
-      return new Date(year, month - 1, day);
-    }
-
-    function startTest() {
-      const minutes = parseInt(document.getElementById('timeLimit').value);
-      timeRemaining = minutes * 60;
-      testScore = 0;
-      testTotal = 0;
-      testAnswers = [];
-      pausesRemaining = 3;
-      isPaused = false;
-      
-      document.getElementById('testSetup').style.display = 'none';
-      document.getElementById('testActive').style.display = 'block';
-      document.getElementById('score').textContent = '0';
-      document.getElementById('totalAttempts').textContent = '0';
-      document.getElementById('pausesLeft').textContent = '3';
-      
-      showNewTestDate();
-      startTestTimer();
-    }
-
-    function startTestTimer() {
-      testTimer = setInterval(() => {
-        if (!isPaused) {
-          timeRemaining--;
-          updateTimerDisplay();
-          
-          if (timeRemaining <= 0) {
-            endTest();
-          }
-        }
-      }, 1000);
-    }
-
-    function updateTimerDisplay() {
-      const minutes = Math.floor(timeRemaining / 60);
-      const seconds = timeRemaining % 60;
-      document.getElementById('timer').textContent = 
-        `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    function showNewTestDate() {
-      currentTestDate = getRandomDate();
-      document.getElementById('testDate').textContent = 
-        `${currentTestDate.getMonth() + 1}/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`;
-      document.getElementById('answerInput').value = '';
-      document.getElementById('answerInput').focus();
-    }
-
-    function submitAnswer() {
-      const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
-      const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      
-      if (!validDays.includes(userAnswer)) {
-        alert('Please enter a valid weekday!');
-        return;
       }
 
-      checkTestAnswer(userAnswer);
-    }
+      // Test System
+      let testTimer;
+      let timeRemaining;
+      let testScore = 0;
+      let testTotal = 0;
+      let testAnswers = [];
+      let currentTestDate;
+      let pausesRemaining = 3;
+      let isPaused = false;
 
-    function checkTestAnswer(userAnswer) {
-      const correctDay = currentTestDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-      const isCorrect = userAnswer === correctDay;
-      
-      testAnswers.push({
-        date: `${currentTestDate.getMonth() + 1}/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`,
-        userAnswer: userAnswer || 'Skipped',
-        correctAnswer: correctDay,
-        isCorrect: isCorrect
-      });
-      
-      if (isCorrect) testScore++;
-      testTotal++;
-      
-      document.getElementById('score').textContent = testScore;
-      document.getElementById('totalAttempts').textContent = testTotal;
-      
-      showNewTestDate();
-    }
+      function getRandomDate() {
+        const year = Math.floor(Math.random() * 200) + 1900;
+        const month = Math.floor(Math.random() * 12) + 1;
+        const day = Math.floor(Math.random() * 28) + 1;
+        return new Date(year, month - 1, day);
+      }
 
-    function skipQuestion() {
-      testAnswers.push({
-        date: `${currentTestDate.getMonth() + 1}/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`,
-        userAnswer: 'Skipped',
-        correctAnswer: currentTestDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase(),
-        isCorrect: false
-      });
-      
-      testTotal++;
-      document.getElementById('totalAttempts').textContent = testTotal;
-      showNewTestDate();
-    }
-
-    function togglePause() {
-      if (!isPaused && pausesRemaining > 0) {
-        isPaused = true;
-        pausesRemaining--;
-        document.getElementById('pausesLeft').textContent = pausesRemaining;
-        document.getElementById('pauseText').textContent = '▶ Resume';
-        document.getElementById('testDate').style.display = 'none';
-        document.getElementById('answerInput').style.display = 'none';
-      } else if (isPaused) {
+      function startTest() {
+        const minutes = parseInt(document.getElementById("timeLimit").value);
+        timeRemaining = minutes * 60;
+        testScore = 0;
+        testTotal = 0;
+        testAnswers = [];
+        pausesRemaining = 3;
         isPaused = false;
-        document.getElementById('pauseText').textContent = '⏸ Pause';
-        document.getElementById('testDate').style.display = 'block';
-        document.getElementById('answerInput').style.display = 'block';
-        document.getElementById('answerInput').focus();
-      } else {
-        alert('No pauses remaining!');
-      }
-    }
 
-    function endTest() {
-      clearInterval(testTimer);
-      document.getElementById('testActive').style.display = 'none';
-      document.getElementById('testResults').style.display = 'block';
-      document.getElementById('finalScore').textContent = testScore;
-      document.getElementById('finalTotal').textContent = testTotal;
-      
-      let tableHTML = '<table><thead><tr><th>Date</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>';
-      
-      testAnswers.forEach(answer => {
-        const resultClass = answer.isCorrect ? 'correct' : 'incorrect';
-        const resultText = answer.isCorrect ? '✓ Correct' : '✗ Incorrect';
-        tableHTML += `
+        document.getElementById("testSetup").style.display = "none";
+        document.getElementById("testActive").style.display = "block";
+        document.getElementById("score").textContent = "0";
+        document.getElementById("totalAttempts").textContent = "0";
+        document.getElementById("pausesLeft").textContent = "3";
+
+        showNewTestDate();
+        startTestTimer();
+      }
+
+      function startTestTimer() {
+        testTimer = setInterval(() => {
+          if (!isPaused) {
+            timeRemaining--;
+            updateTimerDisplay();
+
+            if (timeRemaining <= 0) {
+              endTest();
+            }
+          }
+        }, 1000);
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        document.getElementById("timer").textContent = `${minutes}:${seconds
+          .toString()
+          .padStart(2, "0")}`;
+      }
+
+      function showNewTestDate() {
+        currentTestDate = getRandomDate();
+        document.getElementById("testDate").textContent = `${
+          currentTestDate.getMonth() + 1
+        }/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`;
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").focus();
+      }
+
+      function submitAnswer() {
+        const userAnswer = document
+          .getElementById("answerInput")
+          .value.trim()
+          .toLowerCase();
+        const validDays = [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday",
+          "saturday",
+          "sunday",
+        ];
+
+        if (!validDays.includes(userAnswer)) {
+          alert("Please enter a valid weekday!");
+          return;
+        }
+
+        checkTestAnswer(userAnswer);
+      }
+
+      function checkTestAnswer(userAnswer) {
+        const correctDay = currentTestDate
+          .toLocaleDateString("en-US", { weekday: "long" })
+          .toLowerCase();
+        const isCorrect = userAnswer === correctDay;
+
+        testAnswers.push({
+          date: `${
+            currentTestDate.getMonth() + 1
+          }/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`,
+          userAnswer: userAnswer || "Skipped",
+          correctAnswer: correctDay,
+          isCorrect: isCorrect,
+        });
+
+        if (isCorrect) testScore++;
+        testTotal++;
+
+        document.getElementById("score").textContent = testScore;
+        document.getElementById("totalAttempts").textContent = testTotal;
+
+        showNewTestDate();
+      }
+
+      function skipQuestion() {
+        testAnswers.push({
+          date: `${
+            currentTestDate.getMonth() + 1
+          }/${currentTestDate.getDate()}/${currentTestDate.getFullYear()}`,
+          userAnswer: "Skipped",
+          correctAnswer: currentTestDate
+            .toLocaleDateString("en-US", { weekday: "long" })
+            .toLowerCase(),
+          isCorrect: false,
+        });
+
+        testTotal++;
+        document.getElementById("totalAttempts").textContent = testTotal;
+        showNewTestDate();
+      }
+
+      function togglePause() {
+        if (!isPaused && pausesRemaining > 0) {
+          isPaused = true;
+          pausesRemaining--;
+          document.getElementById("pausesLeft").textContent = pausesRemaining;
+          document.getElementById("pauseText").textContent = "▶ Resume";
+          document.getElementById("testDate").style.display = "none";
+          document.getElementById("answerInput").style.display = "none";
+        } else if (isPaused) {
+          isPaused = false;
+          document.getElementById("pauseText").textContent = "⏸ Pause";
+          document.getElementById("testDate").style.display = "block";
+          document.getElementById("answerInput").style.display = "block";
+          document.getElementById("answerInput").focus();
+        } else {
+          alert("No pauses remaining!");
+        }
+      }
+
+      function endTest() {
+        clearInterval(testTimer);
+        document.getElementById("testActive").style.display = "none";
+        document.getElementById("testResults").style.display = "block";
+        document.getElementById("finalScore").textContent = testScore;
+        document.getElementById("finalTotal").textContent = testTotal;
+
+        let tableHTML =
+          "<table><thead><tr><th>Date</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>";
+
+        testAnswers.forEach((answer) => {
+          const resultClass = answer.isCorrect ? "correct" : "incorrect";
+          const resultText = answer.isCorrect ? "✓ Correct" : "✗ Incorrect";
+          tableHTML += `
           <tr>
             <td>${answer.date}</td>
             <td>${answer.userAnswer}</td>
@@ -1047,21 +1337,21 @@
             <td class="${resultClass}">${resultText}</td>
           </tr>
         `;
-      });
-      
-      tableHTML += '</tbody></table>';
-      document.getElementById('resultsTable').innerHTML = tableHTML;
-    }
-
-    // Enter key support for test
-    document.addEventListener('DOMContentLoaded', function() {
-      const answerInput = document.getElementById('answerInput');
-      if (answerInput) {
-        answerInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') submitAnswer();
         });
+
+        tableHTML += "</tbody></table>";
+        document.getElementById("resultsTable").innerHTML = tableHTML;
       }
-    });
-  </script>
-</body>
+
+      // Enter key support for test
+      document.addEventListener("DOMContentLoaded", function () {
+        const answerInput = document.getElementById("answerInput");
+        if (answerInput) {
+          answerInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") submitAnswer();
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
